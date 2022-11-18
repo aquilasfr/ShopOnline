@@ -1,36 +1,41 @@
 const $tableRows = document.querySelectorAll('tbody > tr');
 
-const increment = (element, button, tableRow) => {
-    element.textContent = `${parseInt(element.textContent) + 1}`;
-    button.removeAttribute('disabled');
-    
+const getTotal = (tableRow, type) => {
+    const $totalBuy = document.querySelector('.total');
+    const $subTotal = tableRow.querySelector('.sub-total');
+    if(type == 'increment') {
+        $totalBuy.textContent = parseInt($subTotal.textContent) + parseInt($totalBuy.textContent);
+        console.log($totalBuy)
+    }else {
+        $totalBuy.textContent = parseInt($totalBuy.textContent) - parseInt($subTotal.textContent);
+    }
+}
+
+const calcSubTotal = (tableRow, $amount, type) => {
     const $productPrice = tableRow.querySelector('.price');
     const $subTotal = tableRow.querySelector('.sub-total');
-    const $totalBuy = document.querySelector('.total');
-    
     const parsedValue = parseInt($productPrice.textContent);
+    const subTotal = parsedValue * $amount.textContent;
     
-    const resultMult = parsedValue * element.textContent;
-    
-    $subTotal.textContent = resultMult.toLocaleString('pt-BR', { minimumFractionDigits: 2});
-    $totalBuy.textContent = resultMult.toLocaleString('pt-BR', { minimumFractionDigits: 2});
-}   
-const decrement = (element, button, tableRow) => {
-    if(element.textContent > 1) {
-        element.textContent = parseInt(element.textContent) - 1;
-                
-        const $productPrice = tableRow.querySelector('.price');
-        const $subTotal = tableRow.querySelector('.sub-total');
-        const $totalBuy = document.querySelector('.total');
+    $subTotal.textContent = subTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2});
 
-        const parsedValue = parseInt($productPrice.textContent);
-        const parsedValueSubtotal = parseInt($subTotal.textContent);
-        
-        const resultSub = parsedValueSubtotal - parsedValue;
-        
-        $subTotal.textContent = resultSub.toLocaleString('pt-BR', { minimumFractionDigits: 2});
-        $totalBuy.textContent = resultSub.toLocaleString('pt-BR', { minimumFractionDigits: 2});
-    }else {
+    getTotal(tableRow, type);
+}
+
+
+const increment = ($amount, button, tableRow) => {
+    $amount.textContent = `${parseInt($amount.textContent) + 1}`;
+    button.removeAttribute('disabled');
+    console.log(button)
+
+    calcSubTotal(tableRow, $amount, 'increment')        
+}   
+const decrement = ($amount, button, tableRow) => {
+     const value = parseInt($amount.textContent) - 1;
+     $amount.textContent = value;
+     calcSubTotal(tableRow, $amount, 'decrement');
+
+    if(value <= 1) { 
         button.setAttribute('disabled', '');
     }
 }
@@ -40,6 +45,6 @@ $tableRows.forEach((tableRow) => {
     const $decrementButton = tableRow.querySelector('.btn-decrement');
     const $amount = tableRow.querySelector('.the-amount');  
 
-    $incrementButton.addEventListener('click', () => increment($amount, $incrementButton, tableRow));
+    $incrementButton.addEventListener('click', () => increment($amount, $decrementButton, tableRow));
     $decrementButton.addEventListener('click', () => decrement($amount, $decrementButton, tableRow));
 });
