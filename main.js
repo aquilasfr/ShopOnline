@@ -49,3 +49,7 @@ $tableRows.forEach((tableRow) => {
     $incrementButton.addEventListener('click', () => increment($amount, $decrementButton, tableRow));
     $decrementButton.addEventListener('click', () => decrement($amount, $decrementButton, tableRow));
 });
+
+fetch('http://localhost:3000/')
+    .then(res => console.log(res))
+    
