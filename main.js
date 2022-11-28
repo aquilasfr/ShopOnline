@@ -1,4 +1,5 @@
 const $tableRows = document.querySelectorAll('tbody > tr');
+const api = 'http://localhost:3000/checkout/1';
 
 const getTotal = () => {
     const $totalBuy = document.querySelector('.total');
@@ -44,12 +45,20 @@ const decrement = ($amount, button, tableRow) => {
 $tableRows.forEach((tableRow) => {
     const $incrementButton = tableRow.querySelector('.btn-increment');
     const $decrementButton = tableRow.querySelector('.btn-decrement');
-    const $amount = tableRow.querySelector('.the-amount');  
-
+    const $amount = tableRow.querySelector('.the-amount');
+    
     $incrementButton.addEventListener('click', () => increment($amount, $decrementButton, tableRow));
     $decrementButton.addEventListener('click', () => decrement($amount, $decrementButton, tableRow));
 });
 
-fetch('http://localhost:3000/')
-    .then(res => console.log(res))
+async function fetchCheckoutData () {
+    const response = await fetch(api);
+    const data = await response.json();
+    console.log(data)
     
+    data.forEach((item) => {
+    console.log(item)  
+        
+    });
+}
+fetchCheckoutData()
